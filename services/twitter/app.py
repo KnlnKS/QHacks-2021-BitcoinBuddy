@@ -10,7 +10,8 @@ access_token_secret = 'IKqUMpgF1flHztV4qzi39QLrsicBXW1TrmElSI6hXF4P9'
 
 tweetsPerQry = 2
 maxTweets = 100
-hashtag = "#bitcoins OR #bitcoin OR #BTC"
+hashtag_btc = "#bitcoins OR #bitcoin OR #BTC"
+hashtag_eth = "#ethereum OR #eth OR #ETH"
 
 authentication = tweepy.OAuthHandler(consumer_key, consumer_secret)
 authentication.set_access_token(access_token, access_token_secret)
@@ -19,7 +20,7 @@ api = tweepy.API(authentication, wait_on_rate_limit=True, wait_on_rate_limit_not
 
 tweet_count = 0
 list_posts = []
-newTweets = tweepy.Cursor(api.search, q=hashtag, lang="en", result_type="recent", tweet_mode="extended").items(500)
+newTweets = tweepy.Cursor(api.search, q=hashtag_eth, lang="en", result_type="recent", tweet_mode="extended").items(500)
 #newTweets = api.search(q=hashtag, result_type="recent").items(5)#, tweet_mode="extended")
 for tweet in newTweets:
     #print(f"{tweet.user.name}:{tweet.text}")
@@ -77,6 +78,6 @@ for x in range (len(list_posts)):
         list_posts[x]["magnitude"] = 0
     '''
 new_file = pd.DataFrame(new_file, columns = ['text', 'score', 'magnitude'])
-new_file.to_csv('tweet_data.csv', header=True, index=False)
+new_file.to_csv('tweet_data_eth.csv', header=True, index=False)
 
 #print (listposts)
