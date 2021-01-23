@@ -45,7 +45,8 @@ def display_crypto(currency):
 
     labels = labels2 + labels1
     values = values2 + values1
-    values = [i.replace(',','') for i in values]
+    if currency in ['bitcoin', 'ethereum']:
+        values = [i.replace(',','') for i in values]
     #values = [int(i) for i in values] 
     print(values[0])
     
