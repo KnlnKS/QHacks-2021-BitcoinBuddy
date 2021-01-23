@@ -4,8 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto-analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <body>
-    <p>hello</p>
+    <p>test</p>
+    
+        
+        <canvas id="myChart" width="1200" height="600" padding="20px"></canvas>
+        
+    
+    <script>
+        Chart.defaults.global.responsive = false;
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: [{% for label in labels %} '{{label}}', {% endfor %}],
+            datasets: [{
+                label: 'Bitcoin Prices',
+                backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "rgba(75,192,192,1)",
+                data: [{% for item in values %} '{{item}}', {% endfor %}],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 300,
+                    suggestedMax: 40000
+                }
+            }]
+        }
+    }
+});
+    </script>
 </body>
 </html>
