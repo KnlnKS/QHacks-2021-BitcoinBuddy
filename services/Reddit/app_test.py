@@ -18,17 +18,29 @@ def index():
     data = data.drop(['Open', 'High', 'Low', 'Vol.', 'Change %'], axis=1)
     for col in data.columns:
         print(col)
-    print(data) 
-    data.iloc[::-1]
-    legend = 'Monthly Data'
-    legend1 = "Test"
-    labels = list(data.Date)
-    values = list(data.Price)
+    #print(data) 
+    data1 = data.head(10)
+    data1 = data1.iloc[::-1]
+    data = data.iloc[10::10]
+    data = data.iloc[::-1]
+    
+
+    print(data)
+    values1 = list(data1.Price)
+    values2 = list(data.Price)
+
+    labels1 = list(data1.Date)
+    labels2 = list(data.Date)
+    #labels = list(data.Date)
+    #values = list(data.Price)
+
+    labels = labels2 + labels1
+    values = values2 + values1
     values = [i.replace(',','') for i in values]
     #values = [int(i) for i in values] 
     print(values[0])
     
-    return render_template('index.html', values=values, labels=labels, legend=legend, legend1=legend1)
+    return render_template('index.html', values=values, labels=labels)
 
 
 if __name__ == "__main__":
