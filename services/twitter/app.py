@@ -19,7 +19,7 @@ api = tweepy.API(authentication, wait_on_rate_limit=True, wait_on_rate_limit_not
 
 tweet_count = 0
 list_posts = []
-newTweets = tweepy.Cursor(api.search, q=hashtag, lang="en", result_type="recent", tweet_mode="extended").items(10)
+newTweets = tweepy.Cursor(api.search, q=hashtag, lang="en", result_type="recent", tweet_mode="extended").items(500)
 #newTweets = api.search(q=hashtag, result_type="recent").items(5)#, tweet_mode="extended")
 for tweet in newTweets:
     #print(f"{tweet.user.name}:{tweet.text}")
@@ -54,8 +54,7 @@ for x in range (len(list_posts)):
     
     sscore = round(response.document_sentiment.score,4)
     smag = round(response.document_sentiment.magnitude,4)
-    print(sscore)
-    print(smag)
+    
 
     new_file.append([list_posts['tweet'][x], sscore, smag])
     '''
@@ -79,20 +78,5 @@ for x in range (len(list_posts)):
     '''
 new_file = pd.DataFrame(new_file, columns = ['text', 'score', 'magnitude'])
 new_file.to_csv('tweet_data.csv', header=True, index=False)
-'''
-while tweetCount < maxTweets:
-	if(maxId <= 0):
-		newTweets = api.search(q=hashtag, count=tweetsPerQry, result_type="recent", tweet_mode="extended")
-	else:
-		newTweets = api.search(q=hashtag, count=tweetsPerQry, max_id=str(maxId - 1), result_type="recent", tweet_mode="extended")
-     
 
-        for tweet in newTweets:
-            d={}
-            d["text"] = tweet.full_text.encode('utf-8')
-            print (d["text"])
-            listposts.append(d)
-
-        tweetCount += len(newTweets)	
-        maxId = newTweets[-1].id'''
 #print (listposts)
