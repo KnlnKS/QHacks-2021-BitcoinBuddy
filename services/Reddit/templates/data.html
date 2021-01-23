@@ -2,15 +2,67 @@
 {% block content %}
 
 <body>
-    <p>Prices in last 4 years</p>
-    
+    <form action='/'>
+        <button type='submit'>Clear</button>
+    </form>
+    <p>Last 5 days prices and predictions</p>
     <div class="container">
-        <canvas id="myChart" width="800" height="400" padding="20px"></canvas>
+        <canvas id="my_chart_small" width="800" height="400" padding="20px"></canvas>
     </div>
-        
     <script>
         Chart.defaults.global.responsive = false;
-        var ctx = document.getElementById('myChart').getContext('2d');
+        var ctx = document.getElementById('my_chart_small').getContext('2d');
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: [{% for label in label_small %} '{{label}}', {% endfor %}],
+            datasets: [{
+                label: 'Bitcoin Prices',
+                backgroundColor: "rgba(75,192,192,0.4)",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                borderColor: "rgba(75,192,192,1)",
+                data: [{% for item in value_small %} '{{item}}', {% endfor %}],
+        }]
+    },
+
+    
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    //suggestedMin: 300,
+                    //suggestedMax: 40000
+                }
+            }]
+        },
+        //onClick: chartClickEvent
+    }
+});
+    </script> 
+    <p>Current price of {{currency}} is {{price}} USD.</p>
+    <p>Prices in last 5 years</p>
+    
+    <div class="container">
+        <canvas id="my_chart" width="800" height="400" padding="20px"></canvas>
+    </div>
+        
+    <script>     
+     
+  
+        Chart.defaults.global.responsive = false;
+        var ctx = document.getElementById('my_chart').getContext('2d');
         var chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
@@ -50,12 +102,9 @@
                 }
             }]
         },
-        onClick: chartClickEvent
+        //onClick: chartClickEvent
     }
 });
-    function chartClickEvent(points, evt){
-        alert(evt[0].value);
-    }
 
     </script>
 </body>

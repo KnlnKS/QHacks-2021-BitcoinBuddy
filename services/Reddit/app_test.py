@@ -4,6 +4,8 @@ import fb_class
 import pandas as pd
 import sys, datetime
 
+from coinbase_api import get_price
+
 #sys.setrecursionlimit(150000)
 
 
@@ -22,17 +24,32 @@ def index():
 
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
 def display_crypto(currency):
+
+    price_data = get_price(currency)
+    price = price_data['amount']
+
     csv = currency + '_historical_data.csv'
     data = pd.read_csv(csv)
     data = data.drop(['Open', 'High', 'Low', 'Vol.', 'Change %'], axis=1)
     for col in data.columns:
         print(col)
     #print(data) 
+    data_small = data.head(6)
+
+    print(data_small)
+
+    data_small = data_small.iloc[::-1]
+    data_small = data_small.iloc[:5:]
+    value_small = list(data_small.Price)
+    label_small = list(data_small.Date)
+
+    if currency in ['bitcoin', 'ethereum']:
+        value_small = [i.replace(',','') for i in value_small]
+
     data1 = data.head(10)
     data1 = data1.iloc[::-1]
     data = data.iloc[10::10]
     data = data.iloc[::-1]
-    
 
     print(data)
     values1 = list(data1.Price)
@@ -55,7 +72,7 @@ def display_crypto(currency):
         return redirect(url_for('display_crypto', currency=currency))
         return redirect(url_for('filler', currency=currency))
     else:
-        return render_template('data.html', labels=labels, values=values)
+        return render_template('data.html', labels=labels, values=values, value_small=value_small, label_small=label_small, currency=currency, price=price)
 
 @app.route('/temp')
 def filler(currency):
