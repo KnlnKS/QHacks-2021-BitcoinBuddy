@@ -8,44 +8,74 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <body>
-    <p>test</p>
-    
-    <div class="container">
-        <canvas id="myChart" width="1200" height="600" padding="20px"></canvas>
-    </div>
-        
-        
-    
-    <script>
-        Chart.defaults.global.responsive = false;
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
+    <style>
+        /* Dropdown Button */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
 
-        // The data for our dataset
-        data: {
-            labels: [{% for label in labels %} '{{label}}', {% endfor %}],
-            datasets: [{
-                label: 'Bitcoin Prices',
-                backgroundColor: "rgba(75,192,192,0.4)",
-                borderColor: "rgba(75,192,192,1)",
-                data: [{% for item in values %} '{{item}}', {% endfor %}],
-        }]
-    },
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
-    // Configuration options go here
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    suggestedMin: 300,
-                    suggestedMax: 40000
-                }
-            }]
-        }
-    }
-});
-    </script>
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+    </style>
+    <div class="dropdown">
+        <button class="dropbtn">Dropdown</button>
+        <div class="dropdown-content">
+
+            <form method='POST'>
+                <input type="text" name="currency" value="bitcoin" hidden>
+                <button type='submit'>Bitcoin</button>
+            </form>
+            <form method='POST'>
+                <input type="text" name="currency" value="ethereum" hidden>
+                <button type='submit'>Ethereum</button>
+            </form>
+            <form method='POST'>
+                <input type="text" name="currency" value="chainlink" hidden>
+                <button type='submit'>Chainlink</button>
+            </form>
+            <form method='POST'>
+                <input type="text" name="currency" value="litecoin" hidden>
+                <button type='submit'>Litecoin</button>
+            </form>
+        </div>
+      </div>
+      <div class='container'>
+        {% block content %}  
+        {% endblock %}  
+      </div>
 </body>
 </html>

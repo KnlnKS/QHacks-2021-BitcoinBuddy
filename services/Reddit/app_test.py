@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Response
+from flask import Flask, render_template, request, redirect, Response, url_for
 import reddit
 import fb_class
 import pandas as pd
@@ -12,9 +12,18 @@ app.config['SECRET_KEY'] = 'bonjour'
 
 firebase_app = fb_class.fire_base_app()
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    data = pd.read_csv(r'bitcoin_historical_data.csv')
+    if request.form:
+        currency = request.form['currency']
+        return redirect(url_for("display_crypto", currency=currency))
+    else:
+        return render_template('index.html')
+
+@app.route('/currency/<currency>', methods=['POST', 'GET'])
+def display_crypto(currency):
+    csv = currency + '_historical_data.csv'
+    data = pd.read_csv(csv)
     data = data.drop(['Open', 'High', 'Low', 'Vol.', 'Change %'], axis=1)
     for col in data.columns:
         print(col)
@@ -40,8 +49,17 @@ def index():
     #values = [int(i) for i in values] 
     print(values[0])
     
-    return render_template('index.html', values=values, labels=labels)
+    if request.form:
+        currency = request.form['currency']
+        return redirect(url_for('display_crypto', currency=currency))
+        return redirect(url_for('filler', currency=currency))
+    else:
+        return render_template('data.html', labels=labels, values=values)
 
+@app.route('/temp')
+def filler(currency):
+
+    return redirect(url_for('display_crypto', currency=currency))
 
 if __name__ == "__main__":
 

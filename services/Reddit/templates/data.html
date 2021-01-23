@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+{% block content %}
+
+<body>
+    <p>Prices in last 4 years</p>
+    
+    <div class="container">
+        <canvas id="myChart" width="800" height="400" padding="20px"></canvas>
+    </div>
+        
+    <script>
+        Chart.defaults.global.responsive = false;
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: [{% for label in labels %} '{{label}}', {% endfor %}],
+            datasets: [{
+                label: 'Bitcoin Prices',
+                backgroundColor: "rgba(75,192,192,0.4)",
+                ill: true,
+                lineTension: 0.1,
+                borderCapStyle: 'butt',
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                borderColor: "rgba(75,192,192,1)",
+                data: [{% for item in values %} '{{item}}', {% endfor %}],
+        }]
+    },
+
+    
+    // Configuration options go here
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    //suggestedMin: 300,
+                    //suggestedMax: 40000
+                }
+            }]
+        },
+        onClick: chartClickEvent
+    }
+});
+    function chartClickEvent(points, evt){
+        alert(evt[0].value);
+    }
+
+    </script>
+</body>
+{% endblock %}  
