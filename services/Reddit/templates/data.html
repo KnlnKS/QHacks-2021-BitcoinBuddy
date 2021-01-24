@@ -107,5 +107,74 @@
 });
 
     </script>
+
+    <div id="canvas_pie" style="width:40%">
+        <!-- <div class="chartjs-render-monitor"></div> -->
+        <canvas id="chart-area" width="538" height="269" class="chartjs-render-monitor"></canvas>
+    </div>
+    <form method='POST'>
+        <input type="text" name="data_type" value="reddit" hidden>
+        <button type='submit'>Reddit</button>
+    </form>
+    <form method='POST'>
+        <input type="text" name="data_type" value="twitter" hidden>
+        <button type='submit'>Twitter</button>
+    </form>
+    <form method='POST'>
+        <input type="text" name="data_type" value="news" hidden>
+        <button type='submit'>News</button>
+    </form>
+    <form method='POST'>
+        <input type="text" name="data_type" value="all" hidden>
+        <button type='submit'>All</button>
+    </form>
+
+    <script>
+        Chart.defaults.global.responsive = false;
+        var ctx = document.getElementById('chart-area').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        '{{positive}}',
+                        '{{neutral}}',
+                        '{{negative}}',
+                    ],
+                    backgroundColor: [
+                    'rgba(114, 255, 48, 1)',
+                    'rgba(234, 174, 0, 1)',
+                    'rgba(225, 25, 1, 1)',
+                    ],
+                    label: '{{data_type_label}}'
+
+                }],
+                labels: [
+                    '{{positive_label}}',
+                    '{{neutral_label}}',
+                    '{{negative_label}}',
+                ]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: "bottom"
+                },
+                title: {
+                    display: true,
+                    text: "sentiment data"
+                },
+                animation: {
+                    animationScale: true,
+                    animationRotate: true
+                }
+            }
+        }
+        );
+        // window.onload = function() {
+        //     var ctx = document.getElementById('chart-area').getContext('2d');
+        //     var chart = new Chart(ctx, config);
+        // };
+    </script>
 </body>
 {% endblock %}  

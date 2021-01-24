@@ -14,6 +14,30 @@ app.config['SECRET_KEY'] = 'bonjour'
 
 firebase_app = fb_class.fire_base_app()
 
+def twitter_pie(data_type, currency):
+    if currency == 'bitcoin':
+        csv_pie = 'tweet_data_btc.csv'
+    else:
+        csv_pie = 'tweet_data_eth.csv'
+
+    data = pd.read_csv(csv_pie)
+    positive_val = 0 
+    negative_val = 0 
+    neutral_val = 0
+    for _,row in data.iterrows():
+        if row['score'] > 0:
+            positive_val += (row['score'] * row['magnitude'])
+        elif row['score'] < 0:
+            negative_val += (row['score'] * row['magnitude'])
+        else:
+            neutral_val += row['magnitude']
+    
+    return positive_val, neutral_val, negative_val
+
+def reddit_pie(data_type, currency):
+    pass
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.form:
@@ -23,7 +47,7 @@ def index():
         return render_template('index.html')
 
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
-def display_crypto(currency):
+def display_crypto(currency, data_type='twitter'):
 
     price_data = get_price(currency)
     price = price_data['amount']
@@ -66,18 +90,45 @@ def display_crypto(currency):
         values = [i.replace(',','') for i in values]
     #values = [int(i) for i in values] 
     print(values[0])
+
+    positive_val = 0
+    negative_val = 0
+    neutral_val = 0
+
+    csv_pie = ''
+    if data_type == 'twitter':
+        positive_val, neutral_val, negative_val = twitter_pie(data_type, currency)
+    elif data_type == 'reddit':
+        positive_val, neutral_val, negative_val = reddit_pie(data_type, currency)
+        
+
+
+    positive = positive_val
+    neutral = neutral_val
+    negative = -negative_val #nos
+
+    #labels pie chart
+    data_type_label = "Sentiment data from " + data_type
+    positive_label  = "Positive sentiments from " + data_type
+    neutral_label  = "Neutral sentiments from " + data_type
+    negative_label  = "Negative sentiments from " + data_type
     
-    if request.form:
+    if request.form.get('currency'):
         currency = request.form['currency']
-        return redirect(url_for('display_crypto', currency=currency))
-        return redirect(url_for('filler', currency=currency))
+        return redirect(url_for('display_crypto', currency=currency, data_type=data_type))
+        #return redirect(url_for('filler', currency=currency))
+    elif request.form.get('data_type'):
+        data_type = request.form['data_type']
+        return redirect(url_for('display_crypto', currency=currency, data_type=data_type))
     else:
-        return render_template('data.html', labels=labels, values=values, value_small=value_small, label_small=label_small, currency=currency, price=price)
+        return render_template('data.html', labels=labels, values=values, value_small=value_small, label_small=label_small, 
+        currency=currency, price=price, positive=positive, neutral=neutral, negative=negative, data_type_label=data_type_label, 
+        positive_label=positive_label, neutral_label=neutral_label, negative_label=negative_label)
 
-@app.route('/temp')
-def filler(currency):
+# @app.route('/temp')
+# def filler(currency):
 
-    return redirect(url_for('display_crypto', currency=currency))
+#     return redirect(url_for('display_crypto', currency=currency))
 
 if __name__ == "__main__":
 
