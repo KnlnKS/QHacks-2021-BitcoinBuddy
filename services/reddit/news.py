@@ -9,8 +9,14 @@ api_key = '&apiKey=d3fb8c426d0d4bb383a06ac1df4b61a5'
 lang = '&language=en'
 num = '&pageSize=100'
 
+def news_new(query):
+    for i in range(1, 22):
+        date = '2021-01-'+str(i)+'&to=2021-01-'+str(i)
+        print(date)
+        news(query, date)
+        
 
-def news(query, date='2021-1-19&to=2021-01-22', sort_by='popularity'):
+def news(query, date, sort_by='popularity'):#='2021-1-19&to=2021-01-22'
     start_date = '&from=' + date
     sort = '&sortBy=' + sort_by
     res = (requests.get(base_url + query + start_date + lang + sort + num + api_key)).json()
@@ -43,8 +49,11 @@ def news(query, date='2021-1-19&to=2021-01-22', sort_by='popularity'):
         parsed_results['sentiment']['compound'] += sent
 
     parsed_results['sentiment']['compound'] /= parsed_results['total_results']
-    with open('./scraped_data/' + str(query) + '_news.json', 'w+') as outfile:
+    
+    with open('./scraped_data/' + str(query) + '_news_' + date + '.json', 'w+') as outfile:
         json.dump(parsed_results, outfile)
 
     return 'nf'
 
+if __name__ == "__main__":
+    news_new("hi")

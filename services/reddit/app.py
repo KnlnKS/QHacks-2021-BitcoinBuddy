@@ -16,7 +16,7 @@ async def scrape_reddit(query):
 
 
 async def scrape_news(query):
-    return new.news(query)
+    return new.news_new(query)
 
 
 async def upload_to_firebase(query):
@@ -51,7 +51,7 @@ def news_page(query):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     reddit_scraped = loop.run_until_complete(scrape_news(q))
-    data_uploaded = loop.run_until_complete(upload_news_to_firebase(q))
+    #data_uploaded = loop.run_until_complete(upload_news_to_firebase(q))
     return "<h1>" + str(q) + "</h1>"
 
 
