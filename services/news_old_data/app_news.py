@@ -59,11 +59,13 @@ def daily_analysis(df):
 
             total_pos += pos
             total_neg += neg
-
+            #print(comp)
             if comp > 0:
                 total_pos += neu
+                total_pos += comp
             elif comp < 0:
                 total_neg += neu
+                total_neg -= comp
             elif comp == 0:
                 total_neu += neu
         
@@ -78,6 +80,7 @@ def daily_analysis(df):
         print(total_neu)
         print("\n")
 
+        #daily_data.append([total_pos, total_neg])
         daily_data.append([total_pos, total_neu, total_neg])
     graph_make(daily_data)
 
